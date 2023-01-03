@@ -1,0 +1,172 @@
+{% include 'header.html' %}
+<div class="container">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newRecordModal">
+        New record
+    </button>
+    <div class="modal fade" id="newRecordModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form action="" method="POST">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">New Record</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              {%for field in layout%}
+                {% if field.attrib['name'] != 'id' %}
+                <div class="mb-3">
+                    <label for="{{field.attrib['name']}}" class="col-form-label">{{field.attrib['name']}}</label>
+                {% if field.attrib['type'] in ['text', 'password','date'] %}
+                    <input type="{{field.attrib['type']}}" id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" class="form-control"/>
+                {% elif field.attrib['type'] == 'textarea' %}
+                    <textarea id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" class="form-control"></textarea>
+                {% elif field.attrib['type'] == 'select' %}
+                    <select name="{{field.attrib['name']}}" class="form-control">
+                        {% for subfield in field %}
+                            <option value="{{subfield.attrib['value']}}">{{subfield.attrib['name']}}</option>
+                        {% endfor %}
+                    </select>
+                {% elif field.attrib['type'] in ['link', 'list'] %}
+                    <div class="input-group mb-3" name="{{field.attrib['name']}}">
+                        <button type="button" data-field-type="{{field.attrib['type']}}" id="{{field.attrib['name']}}" class="btn btn-primary searchBtn" data-bs-target="#searchResultModal" data-bs-toggle="modal" data-bs-dismiss="modal">search</button>
+                        <input type="text" name="{{field.attrib['name']}}" id="{{field.attrib['name']}}" class="form-control searchInput" placeholder="" aria-label="Insert data to be search" aria-describedby="button-addon1">
+                    </div>
+
+                {%endif%}
+                </div>
+                {% endif %}
+                {%endfor%}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+          </form>
+        </div>
+      </div>
+</div>
+
+    <table class="table table-hover">
+        <thead>
+        {% for field in layout %}
+            {% if field.attrib['listview'] == 'True' %}
+                <th>{{field.attrib['name']}}</th>
+            {% endif %}
+        {% endfor %}
+        </thead>
+        <tbody>
+        {% for record in data %}
+        <tr>
+            {% for field in layout %}
+                {% if field.attrib['listview'] == 'True' %}
+                    <td>
+                        {% if field.attrib['type'] == 'link' %}
+                        <a href="/{{field[0].attrib['value']}}/{{record.attrib[field.attrib['name']]}}">{{record.attrib[field.attrib['name']]}}</a>
+                        {% else %}
+                        {{record.attrib[field.attrib['name']]}}
+                        {% endif %}
+                    </td>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+<div class="modal fade" id="searchResultModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggleLabel2">Search results</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="searchResultModalBody">
+        Here there should be search result
+      </div>
+      <div class="modal-footer">
+        <button id="selectedBtn" class="btn btn-primary" data-bs-target="#newRecordModal" data-bs-toggle="modal" data-bs-dismiss="modal">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+<script>
+    var searchBtns = document.getElementsByClassName('searchBtn');
+    let selected = null;
+    var place = document.getElementById("searchResultModalBody");
+    for(var i=0; i< searchBtns.length; i++){
+        searchBtns[i].addEventListener('click', function(event){
+            console.log(event.target.parentNode.getAttribute('name'));
+            var searchInput = event.target.parentNode.getElementsByTagName("input")[0];
+            var selectionType = event.target.getAttribute('data-field-type');
+            fetch('http://127.0.0.1:5000/api/'+event.target.parentNode.getAttribute('name').toUpperCase()+"S?query="+searchInput.value)
+            .then(res => res.text())
+            .then(res => {
+                    data = JSON.parse(res)['RESULT'][event.target.parentNode.getAttribute('name').toUpperCase()];
+                    if(data.length == null){
+                    console.log("why?");
+                        var div = createSearchResult(data, selectionType, searchInput);
+                        var span = document.createElement("span");
+                        span.innerText = data['name'];
+                        div.appendChild(span);
+                        place.appendChild(div);
+                    }
+                    else{
+                    for(var j in data){
+                        var div = createSearchResult(data[j], selectionType, searchInput);
+                        var span = document.createElement("span");
+                        span.innerText = data[j]['name'];
+                        div.appendChild(span);
+                        place.appendChild(div);
+                    }
+                    }
+
+            });
+
+
+        });
+    }
+
+    function createSearchResult(data, selectionType, searchInput){
+        var div = document.createElement("div");
+        div.classList.add("mb-3");
+        if(selectionType == 'link'){
+            let button = document.createElement("button");
+            button.innerText = "select";
+            button.classList.add("btn");
+            button.classList.add("btn-primary");
+            button.id = data['id'];
+            button.addEventListener('click', function(event){
+                selected = event.target.id;
+                searchInput.value = event.target.id;
+            });
+            button.setAttribute('data-bs-target', "#newRecordModal");
+            button.setAttribute('data-bs-toggle',"modal");
+            button.setAttribute('data-bs-dismiss',"modal");
+            div.appendChild(button);
+        }
+        else if(selectionType == 'list'){
+            var checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = data['id'];
+            checkbox.classList.add("form-check-input");
+            checkbox.classList.add("selections");
+            div.appendChild(checkbox);
+            var selectedBtn = document.getElementById('selectedBtn');
+            selectedBtn.addEventListener('click', function(event){
+                var checkboxes = document.getElementsByClassName("selections");
+                searchInput.value = "";
+                for(var k in checkboxes){
+                    if(checkboxes[k].checked == true){
+                        searchInput.value = searchInput.value + checkboxes[k].id + ";";
+                    }
+                }
+            });
+        }
+        return div;
+    }
+
+</script>
+</html>

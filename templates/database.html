@@ -1,0 +1,249 @@
+{% include 'header.html' %}
+
+{% if data %}
+<div class="container">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  New database
+</button>
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="" method="POST">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" class="form-control" name="dbName" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+  <table class="table table-hover">
+    <thead>
+    <th>Name</th>
+    <th>Size</th>
+    <th>Layout</th>
+    <th>Delete</th>
+    </thead>
+    <tbody>
+    {% for base in data %}
+      <tr>
+        <td><a href="/{{base}}/listview">{{base}}</a></td>
+        <td>{{data[base][0]}}</td>
+        <td><a href="/admin/database/layout/{{data[base][1]}}">{{data[base][1]}}</a></td>
+        <td><a href="/admin/database/{{data[base][1]}}/delete"><button type="button" class="btn btn-danger">Delete</button></a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% elif layout %}
+
+</div>
+  <div class="container">
+  <form action="" method="POST">
+    <div id="rows">
+  <div class="row">
+    <h1>Layout for {{layout.attrib['for']}}</h1>
+  </div>
+      <div class="alert alert-light" role="alert">
+  Please notice, that to change field type to select or link, removing already existing field is required!
+    </div>
+      <div class="row">
+        <div class="col"><h2>Field's name</h2></div>
+        <div class="col"><h2>Field's type</h2></div>
+        <div class="col"><h2>Visible in listview</h2></div>
+        <div class="col"><h2>Visible in details</h2></div>
+        <div class="col"><h2></h2></div>
+      </div>
+  {% for field in layout %}
+  <div class="row">
+    <div class="col">
+      <label for="name" class=" form-label">{{field.attrib['name'] | upper}}</label>
+    </div>
+    <div class="col">
+      <select class='form-control' name="{{field.attrib['name']}}">
+        <option value="text" {% if field.attrib['type'] == 'text' %} selected {% endif %}>text</option>
+        <option value="date" {% if field.attrib['type'] == 'date' %} selected {% endif %}>date</option>
+        <option value="password" {% if field.attrib['type'] == 'password' %} selected {% endif %}>password</option>
+        <option value="checkbox" {% if field.attrib['type'] == 'checkbox' %} selected {% endif %}>checkbox</option>
+        <option  value="select" {% if field.attrib['type'] == 'select' %} selected {% endif %}>select</option>
+        <option value="radio" {% if field.attrib['type'] == 'radio' %} selected {% endif %}>radio</option>
+        <option value="textarea" {% if field.attrib['type'] == 'textarea' %} selected {% endif %}>textarea</option>
+        <option value="link" {% if field.attrib['type'] == 'link' %} selected {% endif %}>link</option>
+        <option value="list" {% if field.attrib['type'] == 'list' %} selected {% endif %}>list</option>
+      </select>
+      {% if field.attrib['type'] in ['select', 'link'] %}
+        {% for subfield in field %}
+        <input class="form-control" type="text" name="{{field.attrib['name']}}" value="{{subfield.attrib['value']}}" disabled/>
+        {%endfor%}
+      {% endif %}
+    </div>
+    <div class="col">
+      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="{{field.attrib['name']}}" value="listview" {%if field.attrib['listview'] == 'True'%} checked {%endif%} />
+    </div>
+    <div class="col">
+      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="{{field.attrib['name']}}" value="detailsview" {%if field.attrib['details'] == 'True'%} checked {%endif%} />
+    </div>
+    <div class="col">
+      <a href="/admin/database/layout/{{id}}/delete?name={{field.attrib['name']}}"><button type="button" name="delete" class="btn btn-danger">Delete</button></a>
+    </div>
+  </div>
+  {% endfor %}
+      </div>
+    <button data-bs-toggle="modal" data-bs-target="#addFieldModal" type="button" id="newFldbutton" class="btn btn-success" value="New">New Field</button>
+    <input type="submit" class="btn btn-primary" value="Save"/>
+    <a href="/admin/databases"><button type="button" class="btn btn-secondary" value="Cancel">Cancel</button></a>
+  </form>
+    </div>
+  {% endif %}
+  <div class="modal fade" id="addFieldModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="" method="POST">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="fieldName" class="col-form-label">Field's Name</label>
+              <input type="text" class="form-control" id="fieldName" />
+            </div>
+            <div class="mb-3">
+              <label for="fieldType" class="col-form-label">Field's Name</label>
+              <select type="text" class="form-control nameDependent" id="fieldType">
+                <option value="text" >text</option>
+                <option value="date">date</option>
+                <option value="password" >password</option>
+                <option value="checkbox" >checkbox</option>
+                <option  value="select" >select</option>
+                <option value="radio" >radio</option>
+                <option value="textarea" >textarea</option>
+                <option value="link">link</option>
+                <option value="list" >list</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="listviewCB" class="form-check-label">Visible in listview</label>
+              <input type="checkbox" value="listview" class="form-check-input nameDependent" id="listviewCB" />
+            </div>
+            <div class="mb-3">
+              <label for="detailsCB" class="form-check-label">Visible in details</label>
+              <input type="checkbox" value="detailsview" class="form-check-input nameDependent" id="detailsCB" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
+</body>
+<script>
+
+  var nameInput = document.getElementById('fieldName');
+  var nameDependentFields = document.getElementsByClassName('nameDependent');
+
+  nameInput.addEventListener('change', function(){
+      for(var i in nameDependentFields){
+        console.log(nameDependentFields[i]);
+        nameDependentFields[i].name = nameInput.value;
+      }
+    })
+  fieldType.addEventListener('change', function(event){
+    if(event.target.value == 'select'){
+      var div = document.createElement('div');
+      div.classList.add("input-group");
+      var option = document.createElement('input');
+      option.classList.add('form-control');
+      option.name=nameInput.value;
+      div.appendChild(option);
+
+      var button = document.createElement('button');
+      button.classList.add("btn");
+      button.classList.add("btn-outline-secondary");
+      button.type="button";
+      button.innerText = "Next";
+
+      var removeBtn = document.createElement('button');
+      removeBtn.classList.add("btn");
+      removeBtn.classList.add("btn-outline-danger");
+      removeBtn.type="button";
+      removeBtn.innerText = "-";
+      removeBtn.addEventListener('click', removeInput);
+
+      div.appendChild(button);
+      div.appendChild(removeBtn);
+      fieldType.after(div);
+      button.addEventListener('click', createInput);
+
+    }
+    else if(event.target.value == 'link'){
+      createSelectWithAllDatabase(fieldType)
+    }
+  });
+
+  function createSelectWithAllDatabase(parent){
+    var select = document.createElement('select');
+    select.classList.add('form-control');
+    select.classList.add('nameDependent');
+    select.name = nameInput.value;
+    fetch('http://127.0.0.1:5000/api/databases')
+    .then(res => res.json())
+    .then(res => {
+
+        for(var i in res){
+          var option = document.createElement('option');
+          option.value=i;
+          option.text=i
+          select.appendChild(option);
+
+        }
+    })
+    parent.parentElement.after(select);
+
+
+
+  }
+
+  function createInput(event){
+
+    var div = document.createElement('div');
+      div.classList.add("input-group");
+      var option = document.createElement('input');
+      option.classList.add('form-control');
+      option.name=nameInput.value;
+      div.appendChild(option);
+
+      var button = document.createElement('button');
+      button.classList.add("btn");
+      button.classList.add("btn-outline-secondary");
+      button.type="button";
+      button.innerText = "Next";
+      div.appendChild(button);
+      var removeBtn = document.createElement('button');
+      removeBtn.classList.add("btn");
+      removeBtn.classList.add("btn-outline-danger");
+      removeBtn.type="button";
+      removeBtn.innerText = "-";
+      removeBtn.addEventListener('click', removeInput);
+      div.appendChild(removeBtn);
+      event.target.parentElement.after(div);
+      button.addEventListener('click', createInput);
+  }
+
+  function removeInput(event){
+    event.target.parentElement.remove()
+  }
+</script>
+
+</html>
