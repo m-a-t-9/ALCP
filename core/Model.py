@@ -2,7 +2,7 @@ import json
 import xmltodict
 import xml.etree.ElementTree as ET
 from datetime import datetime
-from core.DatabaseValidator import DatabaseValidator
+from .DatabaseValidator import DatabaseValidator
 
 class Model:
 

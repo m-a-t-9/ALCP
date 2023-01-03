@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "<p>Hello World!</p>"
+    return redirect(url_for("admin_databases"))
 
 @app.route("/<database>/listview", methods=['POST', 'GET'])
 def listview(database):

@@ -2,4 +2,13 @@
     <CLIENTS layout="layout.xml" layoutId="20230102090001">
         <CLIENT id="20230102091001" name="Jan" surname="Kowalski" address="ul. Testowa 1/3 Testowo 11-212" type="ext" />
     </CLIENTS>
-<PRODUCTS layoutId="20230102161010" layout="layout.xml"><PRODUCT id="20230103154553" name="glasses" description="" /><PRODUCT id="20230103155200" name="lens" description="" /><PRODUCT id="20230103160616" name="lens" description="new model of lens" /></PRODUCTS><ORDERS layoutId="20230102161203" layout="layout.xml"><ORDER id="20230103150502" date="2023-01-03" client="20230102091001" product="" /></ORDERS></DATABASE>
+    <PRODUCTS layoutId="20230102161010" layout="layout.xml">
+        <PRODUCT id="20230103154553" name="glasses" description="fancy glasses" />
+        <PRODUCT id="20230103155200" name="lens" description="old model od lens" />
+        <PRODUCT id="20230103160616" name="lens" description="new model of lens" />
+    </PRODUCTS>
+    <ORDERS layoutId="20230102161203" layout="layout.xml">
+        <ORDER id="20230103150502" date="2023-01-03" client="20230102091001" product="" />
+        <ORDER id="20230103185225" date="2023-01-03" client="20230102091001" product="20230103155200;20230103160616;" />
+    </ORDERS>
+</DATABASE>
