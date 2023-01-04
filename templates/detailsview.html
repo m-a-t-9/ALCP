@@ -26,17 +26,40 @@
                 <label class="form-check-input" for="{{field.attrib['name']}}">{{subfield.attrib['value']}}</label>
             </div>
             {% endfor %}
-            {% elif field.attrib['type'] in ['link', 'list'] %}
-            <div class="input-group mb-3" name="{{field.attrib['name']}}">
-                <button type="button" data-field-type="{{field.attrib['type']}}" id="{{field.attrib['name']}}" class="btn btn-primary searchBtn" data-bs-target="#searchResultModal" data-bs-toggle="modal" data-bs-dismiss="modal">search</button>
-                <input type="text" name="{{field.attrib['name']}}" id="{{field.attrib['name']}}" class="form-control searchInput onEditActive" placeholder="" aria-label="Insert data to be search" aria-describedby="button-addon1" value="{{data.attrib[field.attrib['name']]}}" {% if field.attrib['required'] == "True" %}required {% endif %} disabled/>
-            </div>
+
+
+
+
             {%endif%}
       </div>
     {% endfor %}
         <button type="button" id="editBtn" class="btn btn-primary">Edit</button>
         <button type="submit" class="btn btn-primary onEditActive" disabled>Save</button>
     </form>
+</div>
+<div class="container border mt-3">
+    <p>Links</p>
+    {% for field in layout %}
+        {% if field.attrib['type'] == 'link' and field.attrib['name'] != 'id' %}
+            <div class="row border m-3 linkContainer">
+                <p class="databaseName">{{field.attrib['name'] | upper}}</p>
+                <p class="linkId">{{data.attrib[field.attrib['name']]}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+<div class="container border mt-3">
+    <p>Lists</p>
+    <div class="row">
+    {% for field in layout %}
+        {% if field.attrib['type'] == 'list' and field.attrib['name'] != 'id' %}
+            <div class="col border m-3 listContainer">
+                <p class="databaseName">{{field.attrib['name'] | upper}}</p>
+                <p class="linkId">{{data.attrib[field.attrib['name']]}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+    </div>
 </div>
 
 
@@ -50,5 +73,62 @@
             onEditActiveElements[i].disabled = false;
         }
     });
+
+    var linkContainers = document.getElementsByClassName('linkContainer');
+    for(let j=0; j < linkContainers.length; j++){
+        let dbName = linkContainers[j].querySelectorAll(':scope > p')[0];
+        let id = linkContainers[j].querySelectorAll(':scope > p')[1];
+        fetch('http://127.0.0.1:5000/api/layout/' + dbName.innerText + "S?query=shortview:True")
+        .then(layout => layout.json()).then(layout=> {
+            fetch('http://127.0.0.1:5000/api/database/'+id.innerText+"?query=shortview:True")
+            .then(data => data.json()).then(data => {
+                for(var field in layout.LAYOUT.FIELD){
+                    if(layout.LAYOUT.FIELD[field]['type'] == 'text'){
+                        var a = document.createElement("a");
+                        a.setAttribute("href", "/"+dbName.innerText+"S"+"/"+id.innerText);
+                        a.innerText = data[dbName.innerText][layout.LAYOUT.FIELD[field]['name']]
+                        linkContainers[j].appendChild(a);
+                        id.remove()
+                    }
+                }
+            });
+        });
+    }
+
+    var listContainers = document.getElementsByClassName('listContainer');
+    for(let j=0; j < listContainers.length; j++){
+        let dbName = listContainers[j].querySelectorAll(':scope > p')[0];
+        let idsTemporaryField = listContainers[j].querySelectorAll(':scope > p')[1];
+        let ids = idsTemporaryField.innerText.split(";");
+        let layout = fetch('http://127.0.0.1:5000/api/layout/' + dbName.innerText + "S?query=shortview:True")
+        .then((layout) => layout.json())
+        .then((layout) => {
+            if(Object.keys(layout).length != 0){
+                 for(let k=0; k < ids.length; k++){
+                    let div = document.createElement("div");
+                    div.classList.add("row");
+                    if(ids[k] != ""){
+                        fetch('http://127.0.0.1:5000/api/database/'+ids[k]+"?query=shortview:True")
+                        .then(data => data.json()).then(data => {
+                            for(field in layout.LAYOUT.FIELD){
+                                let divCol = document.createElement('div');
+                                divCol.classList.add("col");
+                                let a = document.createElement("a");
+                                a.setAttribute("href", "/"+dbName.innerText+"S"+"/"+ids[k]);
+                                a.innerText = data[dbName.innerText][layout.LAYOUT.FIELD[field]['name']]
+                                divCol.appendChild(a);
+                                div.appendChild(divCol);
+                            }
+                        });
+                        listContainers[j].appendChild(div);
+                    }
+                }
+            }
+        });
+        idsTemporaryField.remove();
+    }
+
+
+
 </script>
 </html>

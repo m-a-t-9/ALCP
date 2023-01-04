@@ -49,8 +49,24 @@ class Model:
             return dic
         return self.__database.findall(".//"+ record[:-1].upper())
 
-    def get_record_by_id(self, id):
+    def get_record_by_id(self, id, jsonfified=False):
+        if jsonfified:
+            json_acceptable_string = str(xmltodict.parse(ET.tostring(self.__database_index[id]))).replace("@", "").replace("'", "\"")
+            return json.loads(json_acceptable_string)
         return self.__database_index[id]
+
+    def get_filtered_record_by_id(self, id, query, jsonified=False):
+        layout = self.get_layout_for(self.__database_index[id].tag + "S")
+        record = self.__database_index[id]
+        item = ET.Element(record.tag)
+        for field in layout:
+            if field.attrib[query.split(":")[0]] == query.split(":")[1]:
+                item.attrib[field.attrib['name']] = record.attrib[field.attrib['name']]
+        if jsonified:
+            json_acceptable_string = str(xmltodict.parse(ET.tostring(item))).replace("@","").replace("'", "\"")
+            return json.loads(json_acceptable_string)
+        return item
+
 
     def search_records(self, record, query):
         root = ET.Element('RESULT')
@@ -65,8 +81,31 @@ class Model:
     def get_container_with_layout_id(self, id):
         return self.__database.find('.//*[@layoutId="' + id + '"]')
 
-    def get_layout_for(self, record):
+    def get_layout_for(self, record, jsonified=False):
+        if jsonified:
+            json_acceptable_string = str(xmltodict.parse(
+                 ET.tostring(self.__layout.find('.//LAYOUT[@for="' + record.upper() + '"]'))))\
+                .replace("@", "")\
+                .replace("'", "\"")
+            return json.loads(json_acceptable_string)
         return self.__layout.find('.//LAYOUT[@for="' + record.upper() + '"]')
+
+    def get_layout_fields_for(self, record, query, jsonified=False):
+        layout = self.__layout.find('.//LAYOUT[@for="' + record.upper() + '"]')
+        filteredLayout = ET.Element("LAYOUT")
+        for field in layout:
+            if query.split(":")[0] in field.attrib.keys() and field.attrib[query.split(":")[0]] == query.split(":")[1]:
+                filteredLayout.append(field)
+
+        if len(filteredLayout) == 0:
+            return {}
+        if jsonified:
+            json_acceptable_string = str(xmltodict.parse(
+                 ET.tostring(filteredLayout)))\
+                .replace("@", "")\
+                .replace("'", "\"")
+            return json.loads(json_acceptable_string)
+        return filteredLayout
 
     def get_layout_by_id(self, id):
         return self.__layout.find('.//LAYOUT[@id="' + id + '"]')
@@ -122,6 +161,10 @@ class Model:
             element.attrib['autopopulated'] = "True"
         else:
             element.attrib['autopopulated'] = "False"
+        if 'shortview' in data:
+            element.attrib['shortview'] = "True"
+        else:
+            element.attrib['shortview'] = "False"
 
 
     def __field_exists(self, name, layout):
@@ -138,7 +181,6 @@ class Model:
 
     def __update_records_by_new_fields(self, data, id):
         container = self.get_container_with_layout_id(id)
-
         for record in container:
             for field in data:
                 if field not in record.attrib:
@@ -176,6 +218,7 @@ class Model:
         field.attrib['type'] = 'link'
         field.attrib['listview'] = 'True'
         field.attrib['details'] = 'True'
+        field.attrib['shortview'] = 'False'
         field.attrib['autopopulated'] = 'True'
         link = ET.SubElement(field, "LINK")
         link.attrib['id'] = self.__generate_id('meta_index')

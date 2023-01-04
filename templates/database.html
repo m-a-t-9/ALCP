@@ -60,6 +60,7 @@
         <div class="col"><h2>Field's type</h2></div>
         <div class="col"><h2>Visible in listview</h2></div>
         <div class="col"><h2>Visible in details</h2></div>
+        <div class="col"><h2>Visible in short</h2></div>
         <div class="col"><h2>Field is required</h2></div>
         <div class="col"><h2>Auto populated</h2></div>
         <div class="col"><h2></h2></div>
@@ -94,6 +95,9 @@
     </div>
     <div class="col">
       <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="{{field.attrib['name']}}" value="detailsview" {%if field.attrib['details'] == 'True'%} checked {%endif%} />
+    </div>
+    <div class="col">
+      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="{{field.attrib['name']}}" value="shortview" {%if field.attrib['shortview'] == 'True'%} checked {%endif%} />
     </div>
     <div class="col">
       <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="{{field.attrib['name']}}" value="required" {%if field.attrib['required'] == 'True'%} checked {%endif%} />
@@ -150,6 +154,10 @@
             <div class="mb-3">
               <label for="detailsCB" class="form-check-label">Visible in details</label>
               <input type="checkbox" value="detailsview" class="form-check-input nameDependent" id="detailsCB" />
+            </div>
+            <div class="mb-3">
+              <label for="shortCB" class="form-check-label">Visible in short</label>
+              <input type="checkbox" value="shortview" class="form-check-input nameDependent" id="shortCB" />
             </div>
             <div class="mb-3">
               <label for="requiredCB" class="form-check-label">Required</label>
