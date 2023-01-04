@@ -218,7 +218,7 @@ class Model:
         field.attrib['type'] = 'link'
         field.attrib['listview'] = 'True'
         field.attrib['details'] = 'True'
-        field.attrib['shortview'] = 'False'
+        field.attrib['shortview'] = 'True'
         field.attrib['autopopulated'] = 'True'
         link = ET.SubElement(field, "LINK")
         link.attrib['id'] = self.__generate_id('meta_index')

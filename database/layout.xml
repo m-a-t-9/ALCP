@@ -28,17 +28,17 @@
     <FIELD name="discount" type="list" listview="False" details="True" required="False" autopopulated="False" shortview="False" />
     </LAYOUT>
     <LAYOUT id="20230104085045" for="CASES">
-        <FIELD name="id" type="link" listview="True" details="True" required="False" autopopulated="False">
+        <FIELD name="id" type="link" listview="True" details="True" required="False" autopopulated="False" shortview="True">
             <LINK id="20230104085045" value="CASES" />
         </FIELD>
-        <FIELD name="email" type="email" listview="True" details="True" required="True" autopopulated="False" />
-        <FIELD name="title" type="text" listview="True" details="True" required="True" autopopulated="False" />
-        <FIELD name="description" type="textarea" listview="False" details="True" required="True" autopopulated="False" />
-        <FIELD name="date" type="date" listview="True" details="True" required="True" autopopulated="True" />
-        <FIELD name="status" type="select" listview="True" details="True" required="True" autopopulated="True">
+        <FIELD name="email" type="email" listview="True" details="True" required="True" autopopulated="False" shortview="False" />
+        <FIELD name="title" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="True" />
+        <FIELD name="description" type="textarea" listview="False" details="True" required="True" autopopulated="False" shortview="False" />
+        <FIELD name="date" type="date" listview="True" details="True" required="True" autopopulated="True" shortview="False" />
+        <FIELD name="status" type="select" listview="True" details="True" required="True" autopopulated="True" shortview="False">
             <OPTION id="20230104093225" name="new" value="new" />
             <OPTION id="20230104093225" name="in progress" value="in progress" />
             <OPTION id="20230104093225" name="closed" value="closed" />
         </FIELD>
     </LAYOUT>
-<LAYOUT id="20230104153630" for="DISCOUNTS"><FIELD name="id" type="link" listview="True" details="True" shortview="True" autopopulated="True" required="False"><LINK id="20230104153630" value="DISCOUNTS" /></FIELD><FIELD name="name" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="True" /><FIELD name="value" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="False" /></LAYOUT></LAYOUTS>
+<LAYOUT id="20230104153630" for="DISCOUNTS"><FIELD name="id" type="link" listview="True" details="True" shortview="True" autopopulated="True" required="False"><LINK id="20230104153630" value="DISCOUNTS" /></FIELD><FIELD name="name" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="True" /><FIELD name="value" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="True" /></LAYOUT></LAYOUTS>

@@ -113,10 +113,18 @@
                             for(field in layout.LAYOUT.FIELD){
                                 let divCol = document.createElement('div');
                                 divCol.classList.add("col");
-                                let a = document.createElement("a");
-                                a.setAttribute("href", "/"+dbName.innerText+"S"+"/"+ids[k]);
-                                a.innerText = data[dbName.innerText][layout.LAYOUT.FIELD[field]['name']]
-                                divCol.appendChild(a);
+                                if(layout.LAYOUT.FIELD[field]['name'] == 'id'){
+                                    let a = document.createElement("a");
+                                    a.setAttribute("href", "/"+dbName.innerText+"S"+"/"+ids[k]);
+                                    a.innerText = data[dbName.innerText][layout.LAYOUT.FIELD[field]['name']]
+                                    divCol.appendChild(a);
+                                }
+                                else{
+                                    let p = document.createElement("p");
+                                    p.innerText = data[dbName.innerText][layout.LAYOUT.FIELD[field]['name']];
+                                    divCol.appendChild(p);
+                                }
+
                                 div.appendChild(divCol);
                             }
                         });
