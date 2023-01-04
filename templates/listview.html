@@ -13,7 +13,7 @@
             </div>
             <div class="modal-body">
               {%for field in layout%}
-                {% if field.attrib['name'] != 'id' %}
+                {% if field.attrib['name'] != 'id' and field.attrib['autopopulated'] == "False" %}
                 <div class="mb-3">
                     <label for="{{field.attrib['name']}}" class="col-form-label">{{field.attrib['name']}}</label>
                 {% if field.attrib['type'] in ['text', 'password','date', 'email'] %}

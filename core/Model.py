@@ -88,7 +88,7 @@ class Model:
     def __manage_complex_type(self, data, element):
         if data[0] == 'select':
             for item in data:
-                if item not in ['listview', 'detailsview', 'select', 'required']:
+                if item not in ['listview', 'detailsview', 'select', 'required', 'autopopulated']:
                     option = ET.SubElement(element, 'OPTION')
                     option.attrib['id'] = self.__generate_id('meta_index')
                     option.attrib['name'] = item
@@ -96,7 +96,7 @@ class Model:
         elif data[0] == 'link':
 
             for item in data:
-                if item not in ['listview', 'detailsview', 'link', 'required']:
+                if item not in ['listview', 'detailsview', 'link', 'required', 'autopopulated']:
                     link = ET.SubElement(element, "LINK")
                     link.attrib['id'] = self.__generate_id('meta_index')
                     link.attrib['value'] = item
@@ -115,6 +115,10 @@ class Model:
             element.attrib['required'] = "True"
         else:
             element.attrib['required'] = "False"
+        if 'autopopulated' in data:
+            element.attrib['autopopulated'] = "True"
+        else:
+            element.attrib['autopopulated'] = "False"
 
 
     def __field_exists(self, name, layout):
@@ -169,6 +173,7 @@ class Model:
         field.attrib['type'] = 'link'
         field.attrib['listview'] = 'True'
         field.attrib['details'] = 'True'
+        field.attrib['autopopulated'] = 'True'
         link = ET.SubElement(field, "LINK")
         link.attrib['id'] = self.__generate_id('meta_index')
         link.attrib['value'] = layout.attrib['for']
@@ -186,8 +191,17 @@ class Model:
         record.attrib['id'] = self.__generate_id('data_index')
         for element in data:
             record.attrib[element] = data[element]
+        layout = self.get_layout_for(database)
+        for field in layout:
+            if field.attrib['autopopulated'] == "True":
+                self.__autopopulation(record, field)
         self.__save('db')
 
+    def __autopopulation(self, record, field):
+        if field.attrib['type'] == 'date':
+            record.attrib[field.attrib['name']] = datetime.now().strftime("%Y-%m-%d")
+        elif field.attrib['type'] == 'select':
+            record.attrib[field.attrib['name']] = field[0].attrib['value']
 
     def __generate_id(self, db):
         candidate = int(datetime.now().strftime("%Y%m%d%H%M%S"))

@@ -27,4 +27,18 @@
             <LINK id="20230103100116" value="CLIENTS" />
         </FIELD>
     <FIELD name="product" type="list" listview="False" details="True" required="True" /></LAYOUT>
-<LAYOUT id="20230104085045" for="CASES"><FIELD name="id" type="link" listview="True" details="True"><LINK id="20230104085045" value="CASES" /></FIELD><FIELD name="email" type="email" listview="True" details="True" required="True" /><FIELD name="title" type="text" listview="True" details="True" required="True" /><FIELD name="description" type="textarea" listview="False" details="True" required="True" /><FIELD name="date" type="date" listview="False" details="True" required="True" /></LAYOUT></LAYOUTS>
+    <LAYOUT id="20230104085045" for="CASES">
+        <FIELD name="id" type="link" listview="True" details="True" required="False" autopopulated="False">
+            <LINK id="20230104085045" value="CASES" />
+        </FIELD>
+        <FIELD name="email" type="email" listview="True" details="True" required="True" autopopulated="False" />
+        <FIELD name="title" type="text" listview="True" details="True" required="True" autopopulated="False" />
+        <FIELD name="description" type="textarea" listview="False" details="True" required="True" autopopulated="False" />
+        <FIELD name="date" type="date" listview="True" details="True" required="True" autopopulated="True" />
+        <FIELD name="status" type="select" listview="True" details="True" required="True" autopopulated="True">
+            <OPTION id="20230104093225" name="new" value="new" />
+            <OPTION id="20230104093225" name="in progress" value="in progress" />
+            <OPTION id="20230104093225" name="closed" value="closed" />
+        </FIELD>
+    </LAYOUT>
+</LAYOUTS>

@@ -61,6 +61,7 @@
         <div class="col"><h2>Visible in listview</h2></div>
         <div class="col"><h2>Visible in details</h2></div>
         <div class="col"><h2>Field is required</h2></div>
+        <div class="col"><h2>Auto populated</h2></div>
         <div class="col"><h2></h2></div>
       </div>
   {% for field in layout %}
@@ -95,6 +96,9 @@
     </div>
     <div class="col">
       <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="{{field.attrib['name']}}" value="required" {%if field.attrib['required'] == 'True'%} checked {%endif%} />
+    </div>
+    <div class="col">
+      <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" name="{{field.attrib['name']}}" value="autopopulated" {%if field.attrib['autopopulated'] == 'True'%} checked {%endif%} />
     </div>
     <div class="col">
       <a href="/admin/database/layout/{{id}}/delete?name={{field.attrib['name']}}"><button type="button" name="delete" class="btn btn-danger">Delete</button></a>
@@ -148,6 +152,10 @@
             <div class="mb-3">
               <label for="requiredCB" class="form-check-label">Required</label>
               <input type="checkbox" value="required" class="form-check-input nameDependent" id="requiredCB" />
+            </div>
+            <div class="mb-3">
+              <label for="autopopulatedCB" class="form-check-label">Auto populated</label>
+              <input type="checkbox" value="autopopulated" class="form-check-input nameDependent" id="autopopulatedCB" />
             </div>
           </div>
           <div class="modal-footer">
