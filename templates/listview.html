@@ -13,13 +13,15 @@
             </div>
             <div class="modal-body">
               {%for field in layout%}
-                {% if field.attrib['name'] != 'id' and field.attrib['autopopulated'] == "False" %}
+                {% if field.attrib['name'] != 'id' and field.attrib['autopopulated'] != "True" %}
                 <div class="mb-3">
                     <label for="{{field.attrib['name']}}" class="col-form-label">{{field.attrib['name']}}</label>
                 {% if field.attrib['type'] in ['text', 'password','date', 'email'] %}
                     <input type="{{field.attrib['type']}}" id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" class="form-control" {% if field.attrib['required'] == "True" %} required {% endif %}/>
                 {% elif field.attrib['type'] == 'textarea' %}
                     <textarea id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" class="form-control" {% if field.attrib['required'] == "True" %}required {% endif %}></textarea>
+                {% elif field.attrib['type'] == 'tel' %}
+                    <input type="{{field.attrib['type']}}" class="form-control" id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" pattern="[1-9]{3}[0-9]{3}[0-9]{3}"/>
                 {% elif field.attrib['type'] == 'select' %}
                     <select name="{{field.attrib['name']}}" class="form-control" {% if field.attrib['required'] == "True" %}required {% endif %}>
                         {% for subfield in field %}

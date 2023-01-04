@@ -186,14 +186,14 @@ class Model:
 
 
     def create_record(self, data, database):
-        root = self.__database.find(database)
-        record = ET.SubElement(root, database[:-1])
+        root = self.__database.find(database.upper())
+        record = ET.SubElement(root, database[:-1].upper())
         record.attrib['id'] = self.__generate_id('data_index')
         for element in data:
             record.attrib[element] = data[element]
         layout = self.get_layout_for(database)
         for field in layout:
-            if field.attrib['autopopulated'] == "True":
+            if 'autopopulated' in field.attrib.keys() and field.attrib['autopopulated'] == "True":
                 self.__autopopulation(record, field)
         self.__save('db')
 
