@@ -20,9 +20,11 @@
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
-    <div>
+    <div class="col">
       {% for dbName in menu.keys() %}
-        <a href="/{{dbName}}/listview" class="btn btn-outline-secondary">{{dbName}}</a>
+        <div class="row mb-1">
+          <a href="/{{dbName}}/listview" class="btn btn-outline-secondary">{{dbName}}</a>
+        </div>
       {% endfor %}
     </div>
   </div>
