@@ -8,7 +8,7 @@
         <PRODUCT id="20230103160616" name="lens" description="new model of lens" />
     </PRODUCTS>
     <ORDERS layoutId="20230102161203" layout="layout.xml">
-        <ORDER id="20230103150502" date="2023-01-03" client="20230102091001" product="" />
+        <ORDER id="20230103150502" date="2023-01-03" client="20230102091001" product="20230103155200;" />
         <ORDER id="20230103185225" date="2023-01-03" client="20230102091001" product="20230103155200;20230103160616;" />
-    </ORDERS>
-</DATABASE>
+    <ORDER id="20230104083258" date="2023-01-04" client="20230102091001" product="20230103160616;" /></ORDERS>
+<CASES layoutId="20230104085045" layout="layout.xml" /></DATABASE>

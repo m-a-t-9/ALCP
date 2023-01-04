@@ -88,7 +88,7 @@ class Model:
     def __manage_complex_type(self, data, element):
         if data[0] == 'select':
             for item in data:
-                if item not in ['listview', 'detailsview', 'select']:
+                if item not in ['listview', 'detailsview', 'select', 'required']:
                     option = ET.SubElement(element, 'OPTION')
                     option.attrib['id'] = self.__generate_id('meta_index')
                     option.attrib['name'] = item
@@ -96,7 +96,7 @@ class Model:
         elif data[0] == 'link':
 
             for item in data:
-                if item not in ['listview', 'detailsview', 'link']:
+                if item not in ['listview', 'detailsview', 'link', 'required']:
                     link = ET.SubElement(element, "LINK")
                     link.attrib['id'] = self.__generate_id('meta_index')
                     link.attrib['value'] = item
@@ -111,6 +111,10 @@ class Model:
             element.attrib['details'] = "True"
         else:
             element.attrib['details'] = "False"
+        if 'required' in data:
+            element.attrib['required'] = "True"
+        else:
+            element.attrib['required'] = "False"
 
 
     def __field_exists(self, name, layout):
