@@ -1,0 +1,147 @@
+{% include 'header.html' %}
+
+<div class="container">
+    <form action="" method="POST">
+    {% for field in layout %}
+        <div class="mb-3">
+            {% if field.attrib['type'] not in ['list', 'link'] or field.attrib['name'] == 'id'%}
+            <label for="{{field.attrib['name']}}" class="col-form-label">{{field.attrib['name']}}</label>
+            {% endif %}
+            {% if field.attrib['name'] == 'id' %}
+            <input type="text" class="form-control" value="{{data.attrib[field.attrib['name']]}}" disabled/>
+            {% elif field.attrib['type'] in ['text', 'password','date', 'email'] %}
+            <input type="{{field.attrib['type']}}" id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" class="form-control onEditActive" {% if field.attrib['required'] == "True" %} required {% endif %} value="{{data.attrib[field.attrib['name']]}}" disabled/>
+            {% elif field.attrib['type'] == 'textarea' %}
+            <textarea id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" class="form-control onEditActive" {% if field.attrib['required'] == "True" %}required {% endif %} disabled>{{data.attrib[field.attrib['name']]}}</textarea>
+            {% elif field.attrib['type'] == 'tel' %}
+            <input type="{{field.attrib['type']}}" class="form-control onEditActive" id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" pattern="[1-9]{3}[0-9]{3}[0-9]{3}" value="{{data.attrib[field.attrib['name']]}}" disabled/>
+            {% elif field.attrib['type'] == 'select' %}
+            <select name="{{field.attrib['name']}}" class="form-control onEditActive" {% if field.attrib['required'] == "True" %}required {% endif %} disabled>
+            {% for subfield in field %}
+                <option value="{{subfield.attrib['value']}}" {% if data.attrib[field.attrib['name']] == subfield.attrib['value'] %} selected {% endif %}>{{subfield.attrib['name']}}</option>
+            {% endfor %}
+            </select>
+            {% elif field.attrib['type'] == 'radio' %}
+            {% for subfield in field %}
+            <div class="form-check">
+                <input class="form-check-input onEditActive" type="radio" name="{{field.attrib['name']}}" id="{{field.attrib['name']}}" value="{{subfield.attrib['value']}}" {% if data.attrib[field.attrib['name']] == subfield.attrib['value'] %} checked {% endif %} disabled/>
+                <label class="form-check-input" for="{{field.attrib['name']}}">{{subfield.attrib['value']}}</label>
+            </div>
+            {% endfor %}
+            {%endif%}
+      </div>
+    {% endfor %}
+        <button type="button" id="editBtn" class="btn btn-primary">Edit</button>
+        <button type="submit" class="btn btn-primary onEditActive" disabled>Save</button>
+    </form>
+</div>
+<div class="container border mt-3">
+    <p>Links</p>
+    {% for field in layout %}
+        {% if field.attrib['type'] == 'link' and field.attrib['name'] != 'id' %}
+            <div class="row border m-3 linkContainer">
+                <p class="databaseName">{{field.attrib['name'] | upper}}</p>
+                <p class="linkId">{{data.attrib[field.attrib['name']]}}</p>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+<div class="container border mt-3">
+    <p>Lists</p>
+    <div class="row">
+    {% for field in layout %}
+        {% if field.attrib['type'] == 'list' and field.attrib['name'] != 'id' %}
+            <div class="col"><table class="table table-striped table-bordered table-hoverable listContainer" name="{{field.attrib['name'] | upper}}" id="{{data.attrib[field.attrib['name']]}}">
+                <thead />
+                <tbody />
+            </table></div>
+        {% endif %}
+    {% endfor %}
+    </div>
+</div>
+
+
+
+</body>
+<script>
+    var editBtn = document.getElementById('editBtn');
+    editBtn.addEventListener('click', function(event){
+        var onEditActiveElements = document.getElementsByClassName('onEditActive');
+        for(var i=0; i < onEditActiveElements.length; i++){
+            onEditActiveElements[i].disabled = false;
+        }
+    });
+
+    var linkContainers = document.getElementsByClassName('linkContainer');
+    for(let j=0; j < linkContainers.length; j++){
+        let dbName = linkContainers[j].querySelectorAll(':scope > p')[0];
+        let id = linkContainers[j].querySelectorAll(':scope > p')[1];
+        fetch('http://127.0.0.1:5000/api/layout/' + dbName.innerText + "S?query=shortview:True")
+        .then(layout => layout.json()).then(layout=> {
+            fetch('http://127.0.0.1:5000/api/database/'+id.innerText+"?query=shortview:True")
+            .then(data => data.json()).then(data => {
+                for(var field in layout.LAYOUT.FIELD){
+                    if(layout.LAYOUT.FIELD[field]['type'] == 'text'){
+                        var a = document.createElement("a");
+                        a.setAttribute("href", "/"+dbName.innerText+"S"+"/"+id.innerText);
+                        a.innerText = data[dbName.innerText][layout.LAYOUT.FIELD[field]['name']]
+                        linkContainers[j].appendChild(a);
+                        id.remove()
+                    }
+                }
+            });
+        });
+    }
+
+    var listContainers = document.getElementsByClassName('listContainer');
+    for(let j=0; j < listContainers.length; j++){
+        console.log(listContainers[j]);
+        let idsTemporaryField = listContainers[j].id;
+        let ids = idsTemporaryField.split(";");
+        let tbody = listContainers[j].getElementsByTagName('tbody')[0];
+        let thead = listContainers[j].getElementsByTagName('thead')[0];
+        let layout = fetch('http://127.0.0.1:5000/api/layout/' + listContainers[j].getAttribute('name') + "S?query=shortview:True")
+        .then((layout) => layout.json())
+        .then((layout) => {
+            if(Object.keys(layout).length != 0){
+                for(let i in layout.LAYOUT.FIELD){
+                    let th = document.createElement("th");
+                    th.innerText = layout.LAYOUT.FIELD[i]['name']
+                    thead.appendChild(th);
+                }
+                 for(let k=0; k < ids.length; k++){
+                    let tr = document.createElement("tr");
+                    if(ids[k] != ""){
+                        fetch('http://127.0.0.1:5000/api/database/'+ids[k]+"?query=shortview:True")
+                        .then(data => data.json()).then(data => {
+                            for(field in layout.LAYOUT.FIELD){
+
+                                let td = document.createElement('td');
+
+                                if(layout.LAYOUT.FIELD[field]['name'] == 'id'){
+                                    let a = document.createElement("a");
+                                    a.setAttribute("href", "/"+listContainers[j].getAttribute('name')+"S"+"/"+ids[k]);
+                                    a.innerText = data[listContainers[j].getAttribute('name')][layout.LAYOUT.FIELD[field]['name']]
+                                    td.appendChild(a);
+                                }
+                                else{
+                                    let p = document.createElement("p");
+                                    p.innerText = data[listContainers[j].getAttribute('name')][layout.LAYOUT.FIELD[field]['name']];
+                                    td.appendChild(p);
+                                }
+
+                                tr.appendChild(td);
+                            }
+                        });
+                        tbody.appendChild(tr);
+                    }
+                }
+            }
+        });
+        //idsTemporaryField.remove();
+    }
+
+
+
+</script>
+</html>

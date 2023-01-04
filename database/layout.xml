@@ -1,42 +1,44 @@
 <LAYOUTS>
     <LAYOUT id="20230102090001" for="CLIENTS">
-        <FIELD name="id" type="link" listview="True" details="True" required="True" autopopulated="False">
+        <FIELD name="id" type="link" listview="True" details="True" required="True" autopopulated="False" shortview="True">
             <LINK id="20230103100116" value="CLIENTS" />
         </FIELD>
-        <FIELD name="name" type="text" listview="True" details="True" required="True" autopopulated="False" />
-        <FIELD name="surname" type="text" listview="True" details="True" required="True" autopopulated="False" />
-        <FIELD name="address" type="textarea" listview="False" details="True" required="True" autopopulated="False" />
-        <FIELD name="email" type="email" listview="True" details="True" required="True" autopopulated="False" />
-        <FIELD name="phone" type="tel" listview="True" details="True" required="False" autopopulated="False" />
+        <FIELD name="name" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="True" />
+        <FIELD name="surname" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="True" />
+        <FIELD name="address" type="textarea" listview="False" details="True" required="True" autopopulated="False" shortview="False" />
+        <FIELD name="email" type="email" listview="True" details="True" required="True" autopopulated="False" shortview="False" />
+        <FIELD name="phone" type="tel" listview="True" details="True" required="False" autopopulated="False" shortview="False" />
     </LAYOUT>
     <LAYOUT id="20230102161010" for="PRODUCTS">
-        <FIELD name="id" type="link" listview="True" details="True" required="True">
+        <FIELD name="id" type="link" listview="True" details="True" required="True" autopopulated="False" shortview="True">
             <LINK id="20230103100116" value="PRODUCTS" />
         </FIELD>
-        <FIELD name="name" type="text" listview="True" details="True" required="True" />
-        <FIELD name="description" type="text" listview="False" details="True" required="True" />
+        <FIELD name="name" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="True" />
+        <FIELD name="description" type="text" listview="False" details="True" required="True" autopopulated="False" shortview="False" />
     </LAYOUT>
     <LAYOUT id="20230102161203" for="ORDERS">
-        <FIELD name="id" type="link" listview="True" details="True" required="True">
-                <LINK id="20230103100116" value="ORDERS" />
+        <FIELD name="id" type="link" listview="True" details="True" required="True" autopopulated="False" shortview="True">
+            <LINK id="20230103100116" value="ORDERS" />
         </FIELD>
-        <FIELD name="date" type="date" listview="True" details="True" required="True" />
-        <FIELD name="client" type="link" listview="True" details="True" required="True">
+        <FIELD name="date" type="date" listview="True" details="True" required="True" autopopulated="False" shortview="False" />
+        <FIELD name="client" type="link" listview="True" details="True" required="True" autopopulated="False" shortview="False">
             <LINK id="20230103100116" value="CLIENTS" />
         </FIELD>
-    <FIELD name="product" type="list" listview="False" details="True" required="True" /></LAYOUT>
+    <FIELD name="product" type="list" listview="False" details="True" required="True" autopopulated="False" shortview="False" />
+    <FIELD name="discount" type="list" listview="False" details="True" required="False" autopopulated="False" shortview="False" />
+    </LAYOUT>
     <LAYOUT id="20230104085045" for="CASES">
-        <FIELD name="id" type="link" listview="True" details="True" required="False" autopopulated="False">
+        <FIELD name="id" type="link" listview="True" details="True" required="False" autopopulated="False" shortview="True">
             <LINK id="20230104085045" value="CASES" />
         </FIELD>
-        <FIELD name="email" type="email" listview="True" details="True" required="True" autopopulated="False" />
-        <FIELD name="title" type="text" listview="True" details="True" required="True" autopopulated="False" />
-        <FIELD name="description" type="textarea" listview="False" details="True" required="True" autopopulated="False" />
-        <FIELD name="date" type="date" listview="True" details="True" required="True" autopopulated="True" />
-        <FIELD name="status" type="select" listview="True" details="True" required="True" autopopulated="True">
+        <FIELD name="email" type="email" listview="True" details="True" required="True" autopopulated="False" shortview="False" />
+        <FIELD name="title" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="True" />
+        <FIELD name="description" type="textarea" listview="False" details="True" required="True" autopopulated="False" shortview="False" />
+        <FIELD name="date" type="date" listview="True" details="True" required="True" autopopulated="True" shortview="False" />
+        <FIELD name="status" type="select" listview="True" details="True" required="True" autopopulated="True" shortview="False">
             <OPTION id="20230104093225" name="new" value="new" />
             <OPTION id="20230104093225" name="in progress" value="in progress" />
             <OPTION id="20230104093225" name="closed" value="closed" />
         </FIELD>
     </LAYOUT>
-</LAYOUTS>
+<LAYOUT id="20230104153630" for="DISCOUNTS"><FIELD name="id" type="link" listview="True" details="True" shortview="True" autopopulated="True" required="False"><LINK id="20230104153630" value="DISCOUNTS" /></FIELD><FIELD name="name" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="True" /><FIELD name="value" type="text" listview="True" details="True" required="True" autopopulated="False" shortview="True" /></LAYOUT></LAYOUTS>

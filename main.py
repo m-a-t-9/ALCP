@@ -19,7 +19,7 @@ def listview(database):
 
 @app.route("/<database>/<id>")
 def details_view(database, id):
-    return render_template('record.html', data=model.get_record_by_id(id),
+    return render_template('detailsview.html', data=model.get_record_by_id(id),
                            layout=model.get_layout_for(database))
 
 @app.route("/admin/databases", methods=['GET', 'POST'])
@@ -48,10 +48,20 @@ def admin_database_delete(id):
     model.remove_database_and_layout(id)
     return redirect(url_for('admin_databases'))
 
+@app.route("/api/layout/<layout>")
+def api_layout(layout):
+    if 'query' in request.args.to_dict(flat=True).keys():
+        return model.get_layout_fields_for(layout, request.args.to_dict(flat=True)['query'], jsonified=True)
+    return model.get_layout_for(layout, jsonified=True)
+
 @app.route("/api/databases")
 def api_databases():
     print("API", str(model.get_list_of_databases()))
     return model.get_list_of_databases()
+
+@app.route("/api/database/<id>")
+def api_database_id(id):
+    return model.get_filtered_record_by_id(id, request.args.to_dict(flat=True)['query'], jsonified=True)
 
 @app.route("/api/<database>")
 def api_database(database):
