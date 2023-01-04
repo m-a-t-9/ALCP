@@ -26,6 +26,13 @@
                             <option value="{{subfield.attrib['value']}}">{{subfield.attrib['name']}}</option>
                         {% endfor %}
                     </select>
+                {% elif field.attrib['type'] == 'select' %}
+                    {% for subfield in field %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="{{field.attrib['name']}}" id="{{field.attrib['name']}}" value="{{subfield.attrib['value']}}" />
+                            <label class="form-check-input" for="{{field.attrib['name']}}">{{subfield.attrib['value']}}</label>
+                        </div>
+                    {% endfor %}
                 {% elif field.attrib['type'] in ['link', 'list'] %}
                     <div class="input-group mb-3" name="{{field.attrib['name']}}">
                         <button type="button" data-field-type="{{field.attrib['type']}}" id="{{field.attrib['name']}}" class="btn btn-primary searchBtn" data-bs-target="#searchResultModal" data-bs-toggle="modal" data-bs-dismiss="modal">search</button>

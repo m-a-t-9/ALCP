@@ -82,7 +82,7 @@
         <option value="link" {% if field.attrib['type'] == 'link' %} selected {% endif %}>link</option>
         <option value="list" {% if field.attrib['type'] == 'list' %} selected {% endif %}>list</option>
       </select>
-      {% if field.attrib['type'] in ['select', 'link'] %}
+      {% if field.attrib['type'] in ['select', 'link', 'radio'] %}
         {% for subfield in field %}
         <input class="form-control" type="text" name="{{field.attrib['name']}}" value="{{subfield.attrib['value']}}" disabled/>
         {%endfor%}
@@ -179,7 +179,7 @@
       }
     })
   fieldType.addEventListener('change', function(event){
-    if(event.target.value == 'select'){
+    if(event.target.value == 'select' || event.target.value == 'radio'){
       var div = document.createElement('div');
       div.classList.add("input-group");
       var option = document.createElement('input');

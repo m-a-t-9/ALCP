@@ -200,7 +200,7 @@ class Model:
     def __autopopulation(self, record, field):
         if field.attrib['type'] == 'date':
             record.attrib[field.attrib['name']] = datetime.now().strftime("%Y-%m-%d")
-        elif field.attrib['type'] == 'select':
+        elif field.attrib['type'] in ['select', 'radio']:
             record.attrib[field.attrib['name']] = field[0].attrib['value']
 
     def __generate_id(self, db):
