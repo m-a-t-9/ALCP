@@ -1,0 +1,43 @@
+<div class="container">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">ALCP</a>
+    <button class="btn btn-outline-success me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#objectCanvas" aria-controls="objectCanvas">Objects</button>
+    <button class="btn btn-outline-success me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#settingsCanvas" aria-controls="settingsCanvas">Settings</button>
+      <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="objectCanvas" aria-labelledby="objectCanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="objectCanvasLabel">Objects</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      {% for dbName in menu.keys() %}
+        <a href="/{{dbName}}/listview" class="btn btn-outline-secondary">{{dbName}}</a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="settingsCanvas" aria-labelledby="settingsCanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="settingsCanvasLabel">Settings</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div>
+      <a href="/admin/databases" class="btn btn-outline-secondary">Objects setup</a>
+    </div>
+  </div>
+</div>
+

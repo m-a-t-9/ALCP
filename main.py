@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from core.Model import Model
 
 model = Model()
-
+databases = model.get_list_of_databases()
 app = Flask(__name__)
 
 
@@ -15,18 +15,21 @@ def listview(database):
     if request.method == "POST":
         model.create_record(request.form.to_dict(), database)
     return render_template('listview.html', data=model.get_all_records(database),
-                           layout=model.get_layout_for(database))
+                           layout=model.get_layout_for(database),
+                           menu=databases)
 
 @app.route("/<database>/<id>")
 def details_view(database, id):
     return render_template('detailsview.html', data=model.get_record_by_id(id),
-                           layout=model.get_layout_for(database))
+                           layout=model.get_layout_for(database),
+                           menu=databases)
 
 @app.route("/admin/databases", methods=['GET', 'POST'])
 def admin_databases():
     if request.method == "POST":
         model.create_database(request.form.to_dict())
-    return render_template('database.html', data=model.get_list_of_databases())
+    return render_template('database.html', data=model.get_list_of_databases(),
+                           menu=databases)
 
 @app.route("/admin/database/layout/<id>", methods=['GET', 'POST'])
 def admin_database_layout(id):
@@ -35,7 +38,8 @@ def admin_database_layout(id):
         model.update_layout_by_id(request.form.to_dict(flat=False), id)
     print(model.get_layout_by_id(id))
     return render_template('database.html', layout=model.get_layout_by_id(id),
-                           id=id)
+                           id=id,
+                           menu=databases)
 
 @app.route("/admin/database/layout/<id>/delete")
 def admin_database_layout_field_delete(id):

@@ -36,7 +36,6 @@ class Model:
         result = {}
         for base in self.__database:
             result[base.tag] = [len(base), base.attrib['layoutId']]
-
         return result
 
     def get_container_for(self, record):
