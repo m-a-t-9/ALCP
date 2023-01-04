@@ -19,7 +19,7 @@ def listview(database):
 
 @app.route("/<database>/<id>")
 def details_view(database, id):
-    return render_template('record.html', data=model.get_record_by_id(id),
+    return render_template('detailsview.html', data=model.get_record_by_id(id),
                            layout=model.get_layout_for(database))
 
 @app.route("/admin/databases", methods=['GET', 'POST'])

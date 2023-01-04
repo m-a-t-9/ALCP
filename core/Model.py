@@ -49,6 +49,9 @@ class Model:
             return dic
         return self.__database.findall(".//"+ record[:-1].upper())
 
+    def get_record_by_id(self, id):
+        return self.__database_index[id]
+
     def search_records(self, record, query):
         root = ET.Element('RESULT')
         result = self.__database.findall(".//" + record[:-1].upper()+'[@name="'+ query +'"]')

@@ -28,7 +28,7 @@
                             <option value="{{subfield.attrib['value']}}">{{subfield.attrib['name']}}</option>
                         {% endfor %}
                     </select>
-                {% elif field.attrib['type'] == 'select' %}
+                {% elif field.attrib['type'] == 'radio' %}
                     {% for subfield in field %}
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="{{field.attrib['name']}}" id="{{field.attrib['name']}}" value="{{subfield.attrib['value']}}" />

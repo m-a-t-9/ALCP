@@ -1,0 +1,54 @@
+{% include 'header.html' %}
+
+<div class="container">
+    <form action="" method="POST">
+    {% for field in layout %}
+        <div class="mb-3">
+            <label for="{{field.attrib['name']}}" class="col-form-label">{{field.attrib['name']}}</label>
+            {% if field.attrib['name'] == 'id' %}
+            <input type="text" class="form-control" value="{{data.attrib[field.attrib['name']]}}" disabled/>
+            {% elif field.attrib['type'] in ['text', 'password','date', 'email'] %}
+            <input type="{{field.attrib['type']}}" id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" class="form-control onEditActive" {% if field.attrib['required'] == "True" %} required {% endif %} value="{{data.attrib[field.attrib['name']]}}" disabled/>
+            {% elif field.attrib['type'] == 'textarea' %}
+            <textarea id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" class="form-control onEditActive" {% if field.attrib['required'] == "True" %}required {% endif %} disabled>{{data.attrib[field.attrib['name']]}}</textarea>
+            {% elif field.attrib['type'] == 'tel' %}
+            <input type="{{field.attrib['type']}}" class="form-control onEditActive" id="{{field.attrib['name']}}" name="{{field.attrib['name']}}" pattern="[1-9]{3}[0-9]{3}[0-9]{3}" value="{{data.attrib[field.attrib['name']]}}" disabled/>
+            {% elif field.attrib['type'] == 'select' %}
+            <select name="{{field.attrib['name']}}" class="form-control onEditActive" {% if field.attrib['required'] == "True" %}required {% endif %} disabled>
+            {% for subfield in field %}
+                <option value="{{subfield.attrib['value']}}" {% if data.attrib[field.attrib['name']] == subfield.attrib['value'] %} selected {% endif %}>{{subfield.attrib['name']}}</option>
+            {% endfor %}
+            </select>
+            {% elif field.attrib['type'] == 'radio' %}
+            {% for subfield in field %}
+            <div class="form-check">
+                <input class="form-check-input onEditActive" type="radio" name="{{field.attrib['name']}}" id="{{field.attrib['name']}}" value="{{subfield.attrib['value']}}" {% if data.attrib[field.attrib['name']] == subfield.attrib['value'] %} checked {% endif %} disabled/>
+                <label class="form-check-input" for="{{field.attrib['name']}}">{{subfield.attrib['value']}}</label>
+            </div>
+            {% endfor %}
+            {% elif field.attrib['type'] in ['link', 'list'] %}
+            <div class="input-group mb-3" name="{{field.attrib['name']}}">
+                <button type="button" data-field-type="{{field.attrib['type']}}" id="{{field.attrib['name']}}" class="btn btn-primary searchBtn" data-bs-target="#searchResultModal" data-bs-toggle="modal" data-bs-dismiss="modal">search</button>
+                <input type="text" name="{{field.attrib['name']}}" id="{{field.attrib['name']}}" class="form-control searchInput onEditActive" placeholder="" aria-label="Insert data to be search" aria-describedby="button-addon1" value="{{data.attrib[field.attrib['name']]}}" {% if field.attrib['required'] == "True" %}required {% endif %} disabled/>
+            </div>
+            {%endif%}
+      </div>
+    {% endfor %}
+        <button type="button" id="editBtn" class="btn btn-primary">Edit</button>
+        <button type="submit" class="btn btn-primary onEditActive" disabled>Save</button>
+    </form>
+</div>
+
+
+
+</body>
+<script>
+    var editBtn = document.getElementById('editBtn');
+    editBtn.addEventListener('click', function(event){
+        var onEditActiveElements = document.getElementsByClassName('onEditActive');
+        for(var i=0; i < onEditActiveElements.length; i++){
+            onEditActiveElements[i].disabled = false;
+        }
+    });
+</script>
+</html>
